@@ -21,6 +21,8 @@ namespace ContosoPizza.Controllers
 
         //All Data
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult<List<PizzaDto>>> GetAll()
         {
             var pizzas = await _pizzaServices.GetAllPizzaAsync();
@@ -31,6 +33,8 @@ namespace ContosoPizza.Controllers
         
         //Get by Id
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<PizzaDto>> Get(int id)
         {
             if (id == 0) return BadRequest();
@@ -40,15 +44,19 @@ namespace ContosoPizza.Controllers
         
         //post 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Add(CreatePizzaDto dto)
         {
             var pizza = await _pizzaServices.PizzaAddAsync(dto);
             return CreatedAtAction(nameof(Get),new {id=pizza.Id }, dto);
-
         }
 
         //put by Id
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Update(int id,[FromBody]UpdatePizzaDto dto)
         {
             await _pizzaServices.UpdatePizzaAsync(id, dto);
@@ -57,6 +65,8 @@ namespace ContosoPizza.Controllers
 
         //delete by Id
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task Delete(int id)
         {
             await _pizzaServices.DeletePizzaById(id);
