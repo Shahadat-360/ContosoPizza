@@ -2,6 +2,7 @@
 using ContosoPizza.DTOs;
 using ContosoPizza.Entities;
 using ContosoPizza.Mapping;
+using ContosoPizza.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,18 +13,20 @@ namespace ContosoPizza.Controllers
     [ApiController]
     public class PizzaController : ControllerBase
     {
-        private readonly PizzaDbContext _db;
-        public PizzaController(PizzaDbContext db) { _db = db; }
+        private PizzaServices _pizzaServices;
+        public PizzaController(PizzaServices pizzaServices) 
+        {
+            _pizzaServices = pizzaServices;
+        }
 
         //All Data
         [HttpGet]
         public async Task<ActionResult<List<PizzaDto>>> GetAll()
         {
-            var pizzas = await _db.Pizzas.ToListAsync();
+            var pizzas = await _pizzaServices.GetAllPizzaAsync();
             if (pizzas == null || pizzas.Count == 0)
                 return NoContent();
-            var pizzasDto = pizzas.Select(pizza=>pizza.ToDto()).ToList();
-            return pizzas == null ? NoContent() : Ok(pizzasDto);
+            return Ok(pizzas);
         }
         
         //Get by Id
@@ -31,29 +34,24 @@ namespace ContosoPizza.Controllers
         public async Task<ActionResult<PizzaDto>> Get(int id)
         {
             if (id == 0) return BadRequest();
-            var pizza = await _db.Pizzas.FirstOrDefaultAsync(x => x.Id == id);
-            return pizza == null ? BadRequest() : Ok(pizza.ToDto());
+            var pizza = await _pizzaServices.GetByIdAsync(id);
+            return pizza == null ? NotFound() : Ok(pizza);
         }
         
         //post 
         [HttpPost]
         public async Task<ActionResult> Add(CreatePizzaDto dto)
         {
-            var pizza = dto.CreateToEntity();
-            await _db.Pizzas.AddAsync(pizza);
-            await _db.SaveChangesAsync();
-            return CreatedAtAction(nameof(Add),new {id=pizza.Id }, dto);
+            var pizza = await _pizzaServices.PizzaAddAsync(dto);
+            return CreatedAtAction(nameof(Get),new {id=pizza.Id }, dto);
+
         }
 
         //put by Id
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id,[FromBody]UpdatePizzaDto dto)
         {
-            var pizza = await _db.Pizzas.FindAsync(id);
-            _db.Entry(pizza)
-                .CurrentValues
-                .SetValues(dto.UpdateToEntity(id));
-            await _db.SaveChangesAsync();
+            await _pizzaServices.UpdatePizzaAsync(id, dto);
             return NoContent();
         }
 
@@ -61,7 +59,7 @@ namespace ContosoPizza.Controllers
         [HttpDelete("{id}")]
         public async Task Delete(int id)
         {
-            await _db.Pizzas.Where(x => x.Id == id).ExecuteDeleteAsync();
+            await _pizzaServices.DeletePizzaById(id);
         }
     }
 }
