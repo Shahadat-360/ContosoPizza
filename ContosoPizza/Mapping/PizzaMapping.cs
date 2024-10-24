@@ -22,5 +22,15 @@ namespace ContosoPizza.Mapping
                 IsGlutenFree=dto.IsGlutenFree
             };
         }
+
+        public static PizzaDto ToDto(this Pizza pizza)
+        {
+            return new PizzaDto
+            (
+                pizza.Id,
+                pizza.Name,
+                pizza.IsGlutenFree
+            );
+        }
     }
 }

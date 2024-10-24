@@ -20,7 +20,10 @@ namespace ContosoPizza.Controllers
         public async Task<ActionResult<List<PizzaDto>>> GetAll()
         {
             var pizzas = await _db.Pizzas.ToListAsync();
-            return pizzas == null ? NoContent() : Ok(pizzas);
+            if (pizzas == null || pizzas.Count == 0)
+                return NoContent();
+            var pizzasDto = pizzas.Select(pizza=>pizza.ToDto()).ToList();
+            return pizzas == null ? NoContent() : Ok(pizzasDto);
         }
         
         //Get by Id
@@ -28,8 +31,8 @@ namespace ContosoPizza.Controllers
         public async Task<ActionResult<PizzaDto>> Get(int id)
         {
             if (id == 0) return BadRequest();
-            var pizzas = await _db.Pizzas.FirstOrDefaultAsync(x => x.Id == id);
-            return pizzas == null ? BadRequest() : Ok(pizzas);
+            var pizza = await _db.Pizzas.FirstOrDefaultAsync(x => x.Id == id);
+            return pizza == null ? BadRequest() : Ok(pizza.ToDto());
         }
         
         //post 
