@@ -2,10 +2,9 @@
 
 namespace ContosoPizza.DTOs
 {
-    public record CreatePizzaDto(
-        [Required]
+    public record PizzaDto(
+        int Id,
         string Name,
-        [Required]
         bool IsGlutenFree
         );
 }

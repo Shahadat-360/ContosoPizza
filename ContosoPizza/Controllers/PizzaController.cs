@@ -17,11 +17,20 @@ namespace ContosoPizza.Controllers
 
         //All Data
         [HttpGet]
-        public async Task<ActionResult<List<Pizza>>> GetAll() => Ok(await _db.Pizzas.ToListAsync());
+        public async Task<ActionResult<List<PizzaDto>>> GetAll()
+        {
+            var pizzas = await _db.Pizzas.ToListAsync();
+            return pizzas == null ? NoContent() : Ok(pizzas);
+        }
         
         //Get by Id
         [HttpGet("{id}")]
-        public async Task<ActionResult<Pizza>> Get(int id) => Ok(await _db.Pizzas.FirstOrDefaultAsync(x => x.Id == id));
+        public async Task<ActionResult<PizzaDto>> Get(int id)
+        {
+            if (id == 0) return BadRequest();
+            var pizzas = await _db.Pizzas.FirstOrDefaultAsync(x => x.Id == id);
+            return pizzas == null ? BadRequest() : Ok(pizzas);
+        }
         
         //post 
         [HttpPost]
