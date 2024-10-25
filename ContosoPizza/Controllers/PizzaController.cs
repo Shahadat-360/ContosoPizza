@@ -1,11 +1,6 @@
-﻿using ContosoPizza.Data;
-using ContosoPizza.DTOs;
-using ContosoPizza.Entities;
-using ContosoPizza.Mapping;
+﻿using ContosoPizza.DTOs;
 using ContosoPizza.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ContosoPizza.Controllers
 {
@@ -23,9 +18,9 @@ namespace ContosoPizza.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult<List<PizzaDto>>> GetAll()
+        public async Task<ActionResult<List<PizzaDto>>> GetAll(int Page=1,int PageSize=10)
         {
-            var pizzas = await _pizzaServices.GetAllPizzaAsync();
+            var pizzas = await _pizzaServices.GetAllPizzaAsync(Page,PageSize);
             if (pizzas == null || pizzas.Count == 0)
                 return NoContent();
             return Ok(pizzas);

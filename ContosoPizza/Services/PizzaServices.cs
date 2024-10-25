@@ -14,9 +14,12 @@ namespace ContosoPizza.Services
         }
 
         //All Data
-        public async Task<List<PizzaDto>> GetAllPizzaAsync()
+        public async Task<List<PizzaDto>> GetAllPizzaAsync(int Page,int PageSize)
         {
-            var pizzas = await _db.Pizzas.ToListAsync();
+            var pizzas = await _db.Pizzas
+                                  .Skip((Page-1)*PageSize)
+                                  .Take(PageSize)
+                                  .ToListAsync();
             return pizzas.Select(pizza => pizza.ToDto()).ToList();
         }
 
