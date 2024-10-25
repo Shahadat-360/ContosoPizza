@@ -8,6 +8,7 @@ namespace ContosoPizza.DTOs
         [Required]
         bool IsGlutenFree,
         [Required]
+        [Range(0.01,double.MaxValue)]
         double Price
         );
 }
