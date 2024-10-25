@@ -6,6 +6,8 @@ namespace ContosoPizza.DTOs
         [Required]
         string Name,
         [Required]
-        bool IsGlutenFree
+        bool IsGlutenFree,
+        [Required]
+        double Price
         );
 }

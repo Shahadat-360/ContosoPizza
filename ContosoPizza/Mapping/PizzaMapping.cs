@@ -10,7 +10,8 @@ namespace ContosoPizza.Mapping
             return new()
             {
                 Name = dto.Name,
-                IsGlutenFree = dto.IsGlutenFree
+                IsGlutenFree = dto.IsGlutenFree,
+                Price = dto.Price,
             };
         }
         public static Pizza UpdateToEntity(this UpdatePizzaDto dto,int id)
@@ -19,7 +20,8 @@ namespace ContosoPizza.Mapping
             {
                 Id=id,
                 Name=dto.Name,
-                IsGlutenFree=dto.IsGlutenFree
+                IsGlutenFree=dto.IsGlutenFree,
+                Price=dto.Price
             };
         }
 
@@ -29,7 +31,8 @@ namespace ContosoPizza.Mapping
             (
                 pizza.Id,
                 pizza.Name,
-                pizza.IsGlutenFree
+                pizza.IsGlutenFree,
+                pizza.Price
             );
         }
     }

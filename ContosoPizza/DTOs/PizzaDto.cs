@@ -5,6 +5,7 @@ namespace ContosoPizza.DTOs
     public record PizzaDto(
         int Id,
         string Name,
-        bool IsGlutenFree
+        bool IsGlutenFree,
+        double Price
         );
 }

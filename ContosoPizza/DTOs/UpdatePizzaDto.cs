@@ -2,6 +2,7 @@
 {
     public record UpdatePizzaDto(
         string Name,
-        bool IsGlutenFree
+        bool IsGlutenFree,
+        double Price
         );
 }
