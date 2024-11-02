@@ -1,11 +1,13 @@
 ﻿using ContosoPizza.DTOs;
 using ContosoPizza.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContosoPizza.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PizzaController : ControllerBase
     {
         private PizzaServices _pizzaServices;

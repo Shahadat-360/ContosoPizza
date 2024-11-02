@@ -1,6 +1,9 @@
 using ContosoPizza.Data;
 using ContosoPizza.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +15,29 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<PizzaDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+var config = builder.Configuration;
+builder.Services.AddAuthentication(options=>
+{
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.SaveToken=true;
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new
+    Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidIssuer = config["jwt:IsUser"],
+        ValidAudience = config["jwt:Audience"],
+        IssuerSigningKey = new
+        SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["jwt:SecretKey"]))
+    };
+});
+
 builder.Services.AddScoped<PizzaServices>();
 var app = builder.Build();
 
@@ -23,6 +49,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
