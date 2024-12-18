@@ -89,7 +89,7 @@ ContosoPizza
 ---
 
 ## Technologies Used
-- **ASP.NET Core Minimal API**
+- **ASP.NET Core Web API**
 - **Entity Framework Core**
 - **SQL Server**
 - **JWT Authentication**
